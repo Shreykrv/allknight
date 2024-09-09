@@ -4,13 +4,33 @@
     $(window).on("scroll", function () {
         if ($(this).scrollTop() > 150) {
             $(".navbar-area").addClass("is-sticky");
+            $(".navbar-area").removeClass("float");
+            // Additional changes you might want to uncomment and use:
+            // $(".navbar-area").removeClass("bg-transparent");
+            // $(".navbar-area").addClass("bg-red");
+            // $(".nav-item a").removeClass("text-dark");
+            // $(".nav-item a").removeClass("z-relative");
         } else {
+            $(".navbar-area").addClass("float");
             $(".navbar-area").removeClass("is-sticky");
+            // Additional changes you might want to uncomment and use:
+            // $(".navbar-area").removeClass("bg-red");
+            // $(".navbar-area").addClass("bg-transparent");
+            // $(".nav-item a").addClass("text-dark");
+            // $(".nav-item a").addClass("z-relative");
         }
+        
         var scrolled = $(window).scrollTop();
-        if (scrolled > 300) $(".go-top").addClass("active");
-        if (scrolled < 300) $(".go-top").removeClass("active");
+        if (scrolled > 300) {
+            $(".go-top").addClass("active");
+        } else {
+            $(".go-top").removeClass("active");
+        }
     });
+    
+   
+     
+      
     $(".offer-slider").owlCarousel({
         loop: true,
         margin: 0,
@@ -27,6 +47,17 @@
         animateOut: "slideOutDown",
         animateIn: "slideInDown",
     });
+    // $("#thumbs").owlCarousel({
+    //     items: 1,
+    //     loop: true,
+    //     nav: false,
+    //     dots: false,
+    //     autoplay: false,
+    //     autoplayHoverPause: true,
+    //     margin: 0,
+    //     smartSpeed: 1500,
+    //     responsive: { 0: { items: 4 }, 576: { items: 4 }, 768: { items: 4 }, 992: { items: 4 }, 1200: { items: 4 } },
+    // });
     $(".product-categories-slider").owlCarousel({
         items: 1,
         loop: true,
@@ -47,7 +78,7 @@
         autoplay: true,
         smartSpeed: 1000,
         autoplayHoverPause: true,
-        responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 3 }, 1200: { items: 3 } },
+        responsive: { 0: { items: 1 }, 576: { items: 1 }, 768: { items: 2 }, 992: { items: 3 }, 1200: { items: 4 } },
     });
     $(".feedback-slider").owlCarousel({ items: 1, loop: true, margin: 0, nav: false, dots: false, autoplay: true, smartSpeed: 1000, autoplayHoverPause: true });
     $(".featured-slider").owlCarousel({
@@ -84,14 +115,14 @@
         responsive: { 0: { items: 2 }, 414: { items: 2 }, 576: { items: 3 }, 768: { items: 3 }, 992: { items: 4 }, 1200: { items: 4 } },
     });
     $(".related-product").owlCarousel({
-        loop: false,
+        loop: true,
         margin: 15,
         nav: true,
         dots: false,
-        autoplay: false,
+        autoplay: true,
         smartSpeed: 1000,
         autoplayHoverPause: true,
-        responsive: { 0: { items: 2 }, 414: { items: 2 }, 576: { items: 2 }, 768: { items: 2 }, 992: { items: 3 }, 1200: { items: 5 } },
+        responsive: { 0: { items: 1 }, 414: { items: 2 }, 576: { items: 2 }, 768: { items: 2 }, 992: { items: 3 }, 1200: { items: 4 } },
     });
     $(".go-top").on("click", function () {
         $("html, body").animate({ scrollTop: "0" }, 50);
@@ -274,3 +305,93 @@
         bigimage.data("owl.carousel").to(number, 300, true);
     });
 })(jQuery);
+
+function toggleContent() {
+    const extraContent = document.querySelector('.extra-content');
+    const button = document.getElementById('toggle-button');
+
+    if (extraContent.style.display === 'none') {
+        // Show extra content
+        extraContent.style.display = 'block';
+        button.textContent = 'Show Less';
+    } else {
+        // Hide extra content
+        extraContent.style.display = 'none';
+        button.textContent = 'Show More';
+    }
+}
+
+$(document).ready(function() {
+    // Expand section logic
+    $(document).on('click', '.bx-plus', function() {
+        var $expandSection = $(this).closest('.cart-table-box').find('.expand');
+
+        // Remove d-none and calculate the actual height
+        $expandSection.removeClass('d-none').css('height', 'auto');
+        var actualHeight = $expandSection.outerHeight(); // Get the full height
+
+        // Reset the height to 0 for the animation, and animate to the actual height
+        $expandSection.css('height', '0').animate({height: actualHeight}, 300);
+
+        // Switch icons
+        $(this).removeClass('bx-plus').addClass('bx-minus');
+    });
+
+    // Collapse section logic
+    $(document).on('click', '.bx-minus', function() {
+        var $expandSection = $(this).closest('.cart-table-box').find('.expand');
+
+        // Animate height to 0, then hide the element
+        $expandSection.animate({height: '0'}, 300, function() {
+            $(this).addClass('d-none'); // After animation, hide the element
+        });
+
+        // Switch icons
+        $(this).removeClass('bx-minus').addClass('bx-plus');
+    });
+});
+document.addEventListener('DOMContentLoaded', function () {
+    const content = document.getElementById('textContent');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const fullText = content.textContent.trim();
+    const shortText = fullText.substring(0, 50);
+
+    // Function to check screen width and apply the toggle functionality
+    function applyToggle() {
+        if (window.innerWidth < 763) {
+            // Display the toggle button when the screen is less than 763px
+            toggleBtn.style.display = "inline";
+            toggleBtn.style.color = "white";
+            content.textContent = shortText + "...";
+            toggleBtn.textContent = "Read more";
+            let isExpanded = false;
+
+            toggleBtn.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent the default anchor behavior
+                if (!isExpanded) {
+                    content.textContent = fullText;
+                    toggleBtn.textContent = "Read less";
+                } else {
+                    content.textContent = shortText + "...";
+                    toggleBtn.textContent = "Read more";
+                }
+                isExpanded = !isExpanded; // Toggle the state
+            });
+        } else {
+            // If the screen is larger, show the full text and hide the toggle button
+            toggleBtn.style.display = "none";
+            content.textContent = fullText; // Show full text on larger screens
+        }
+    }
+
+    // Apply the toggle functionality on initial load
+    applyToggle();
+
+    // Reapply the toggle functionality on window resize
+    window.addEventListener('resize', applyToggle);
+});
+
+
+
+
+
